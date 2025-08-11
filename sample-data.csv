@@ -1,0 +1,21 @@
+Name,Age,Salary,Department,Experience,Rating
+John Doe,25,50000,Engineering,2,4.5
+Jane Smith,,60000,Marketing,5,4.8
+Bob Johnson,30,,Sales,3,4.2
+Alice Brown,28,55000,Engineering,4,4.6
+Charlie Wilson,35,70000,HR,7,4.9
+Diana Davis,27,52000,Marketing,2,4.3
+Eve Miller,32,65000,Engineering,6,4.7
+Frank Garcia,29,58000,Sales,3,4.4
+Grace Lee,31,62000,Engineering,5,4.8
+Henry Taylor,26,54000,Marketing,1,4.1
+Ivy Chen,33,68000,HR,8,4.9
+Jack Anderson,24,48000,Engineering,1,4.0
+Kate Wilson,36,72000,Sales,9,4.9
+Liam O'Connor,28,56000,Marketing,3,4.5
+Mia Rodriguez,30,61000,Engineering,4,4.6
+Noah Thompson,27,53000,Sales,2,4.2
+Olivia White,34,69000,HR,7,4.8
+Paul Martinez,29,57000,Engineering,3,4.4
+Quinn Johnson,31,63000,Marketing,5,4.7
+Ruby Davis,25,51000,Sales,1,4.1

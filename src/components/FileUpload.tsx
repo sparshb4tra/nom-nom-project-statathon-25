@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { Upload, FileText, BarChart3, Download, FileDown, AlertCircle, X, ChevronRight, Table } from 'lucide-react';
+import { Upload, FileText, BarChart3, FileDown, AlertCircle, X, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { DataProcessor, DataAnalysis } from '@/lib/dataProcessor';

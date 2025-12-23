@@ -114,18 +114,18 @@ export default function FileUpload() {
 
   return (
     <div className="w-full space-y-12">
-      <header className="border-b-2 border-black pb-6 mb-12">
-        <h1 className="text-6xl font-black tracking-tighter uppercase mb-2">
+      <header className="border-b-2 border-black pb-6 mb-8 md:mb-12">
+        <h1 className="text-4xl md:text-6xl font-black tracking-tighter uppercase mb-2 break-words">
           Data Cleaner
         </h1>
-        <p className="text-xl font-medium text-gray-500 uppercase tracking-widest">
-          High Precision Analysis Tool v1.0
+        <p className="text-lg md:text-xl font-medium text-gray-500 uppercase tracking-widest">
+          High Precision Analysis Tool v1.1
         </p>
       </header>
 
-      <div className="grid lg:grid-cols-2 gap-12 items-start">
+      <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-start">
         {/* Left Column: Upload & Controls */}
-        <div className="space-y-8">
+        <div className="space-y-6 md:space-y-8">
           <section>
             <h2 className="text-lg font-bold uppercase mb-4 flex items-center gap-2">
               <span className="bg-black text-white px-2 py-0.5 text-xs">01</span>
@@ -136,7 +136,7 @@ export default function FileUpload() {
               <div
                 {...getRootProps()}
                 className={cn(
-                  "border-2 border-black p-12 transition-all duration-200 cursor-pointer bg-white hover:bg-gray-50",
+                  "border-2 border-black p-6 md:p-12 transition-all duration-200 cursor-pointer bg-white hover:bg-gray-50",
                   isDragActive && "bg-black text-white"
                 )}
               >
@@ -257,18 +257,18 @@ export default function FileUpload() {
                 <span className="bg-black text-white px-2 py-0.5 text-xs">03</span>
                 Metrics
               </h2>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="border-2 border-black p-6 hover:bg-gray-50 transition-colors">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="border-2 border-black p-4 md:p-6 hover:bg-gray-50 transition-colors">
                   <p className="text-xs font-mono text-gray-500 uppercase mb-2">Total Rows</p>
-                  <p className="text-4xl font-black">{analysis.summary.totalRows}</p>
+                  <p className="text-3xl md:text-4xl font-black">{analysis.summary.totalRows}</p>
                 </div>
-                <div className="border-2 border-black p-6 hover:bg-gray-50 transition-colors">
+                <div className="border-2 border-black p-4 md:p-6 hover:bg-gray-50 transition-colors">
                   <p className="text-xs font-mono text-gray-500 uppercase mb-2">Total Columns</p>
-                  <p className="text-4xl font-black">{analysis.summary.totalColumns}</p>
+                  <p className="text-3xl md:text-4xl font-black">{analysis.summary.totalColumns}</p>
                 </div>
-                <div className="col-span-2 border-2 border-black p-6 hover:bg-gray-50 transition-colors">
+                <div className="col-span-1 sm:col-span-2 border-2 border-black p-4 md:p-6 hover:bg-gray-50 transition-colors">
                   <p className="text-xs font-mono text-gray-500 uppercase mb-2">Missing Values Detected</p>
-                  <p className="text-4xl font-black text-red-600">
+                  <p className="text-3xl md:text-4xl font-black text-red-600">
                     {Object.values(analysis.summary.missingValues).reduce((a, b) => a + b, 0)}
                   </p>
                 </div>

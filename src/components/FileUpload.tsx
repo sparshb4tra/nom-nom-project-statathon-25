@@ -114,18 +114,18 @@ export default function FileUpload() {
 
   return (
     <div className="w-full space-y-12">
-      <header className="border-b-2 border-black pb-6 mb-8 md:mb-12">
-        <h1 className="text-4xl md:text-6xl font-black tracking-tighter uppercase mb-2 break-words">
+      <header className="border-b-2 border-black pb-8 mb-12 md:mb-16">
+        <h1 className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tighter uppercase mb-4 break-words leading-[0.9]">
           Data Cleaner
         </h1>
-        <p className="text-lg md:text-xl font-medium text-gray-500 uppercase tracking-widest">
+        <p className="text-sm sm:text-lg md:text-xl font-medium text-gray-500 uppercase tracking-widest">
           High Precision Analysis Tool v1.1
         </p>
       </header>
 
-      <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-start">
+      <div className="grid lg:grid-cols-2 gap-12 md:gap-20 items-start">
         {/* Left Column: Upload & Controls */}
-        <div className="space-y-6 md:space-y-8">
+        <div className="space-y-8 md:space-y-12">
           <section>
             <h2 className="text-lg font-bold uppercase mb-4 flex items-center gap-2">
               <span className="bg-black text-white px-2 py-0.5 text-xs">01</span>

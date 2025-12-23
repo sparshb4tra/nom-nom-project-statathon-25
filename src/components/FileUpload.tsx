@@ -2,12 +2,12 @@
 
 import React, { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { Upload, FileText, BarChart3, Download, FileDown } from 'lucide-react';
+import { Upload, FileText, BarChart3, Download, FileDown, AlertCircle, X, ChevronRight, Table } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { DataProcessor, DataAnalysis } from '@/lib/dataProcessor';
 import { ReportGenerator } from '@/lib/reportGenerator';
+import { cn } from '@/lib/utils';
 
 export default function FileUpload() {
   const [file, setFile] = useState<File | null>(null);
@@ -105,199 +105,197 @@ export default function FileUpload() {
     ReportGenerator.downloadHTML(html, fileName);
   };
 
-  return (
-    <div className="max-w-4xl mx-auto p-6 space-y-6">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">
-          AI-Enhanced Data Cleaning Tool
-        </h1>
-        <p className="text-xl text-gray-600">
-          Upload your CSV or Excel file and get automated cleaning, analysis, and insights
-        </p>
-      </div>
+  const clearFile = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setFile(null);
+    setAnalysis(null);
+    setError(null);
+  };
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Upload className="h-5 w-5" />
-            Upload Your Data File
-          </CardTitle>
-          <CardDescription>
-            Drag and drop your CSV or Excel file here, or click to browse
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div
-            {...getRootProps()}
-            className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${
-              isDragActive
-                ? 'border-blue-500 bg-blue-50'
-                : 'border-gray-300 hover:border-gray-400'
-            }`}
-          >
-            <input {...getInputProps()} />
-            <Upload className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            {isDragActive ? (
-              <p className="text-blue-600 font-medium">Drop the file here...</p>
+  return (
+    <div className="w-full space-y-12">
+      <header className="border-b-2 border-black pb-6 mb-12">
+        <h1 className="text-6xl font-black tracking-tighter uppercase mb-2">
+          Data Cleaner
+        </h1>
+        <p className="text-xl font-medium text-gray-500 uppercase tracking-widest">
+          High Precision Analysis Tool v1.0
+        </p>
+      </header>
+
+      <div className="grid lg:grid-cols-2 gap-12 items-start">
+        {/* Left Column: Upload & Controls */}
+        <div className="space-y-8">
+          <section>
+            <h2 className="text-lg font-bold uppercase mb-4 flex items-center gap-2">
+              <span className="bg-black text-white px-2 py-0.5 text-xs">01</span>
+              Input Source
+            </h2>
+            
+            {!file ? (
+              <div
+                {...getRootProps()}
+                className={cn(
+                  "border-2 border-black p-12 transition-all duration-200 cursor-pointer bg-white hover:bg-gray-50",
+                  isDragActive && "bg-black text-white"
+                )}
+              >
+                <input {...getInputProps()} />
+                <div className="flex flex-col items-center justify-center gap-4 text-center">
+                  <Upload className={cn("h-12 w-12", isDragActive ? "text-white" : "text-black")} />
+                  <div className="space-y-1">
+                    <p className="text-xl font-bold uppercase">Drop File Here</p>
+                    <p className={cn("text-sm font-mono", isDragActive ? "text-gray-300" : "text-gray-500")}>
+                      .CSV .XLSX .XLS
+                    </p>
+                  </div>
+                </div>
+              </div>
             ) : (
-              <div>
-                <p className="text-gray-600 mb-2">
-                  Drag & drop a file here, or click to select
-                </p>
-                <p className="text-sm text-gray-500">
-                  Supports CSV, XLSX, and XLS files
-                </p>
+              <div className="border-2 border-black p-6 bg-white space-y-6">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex items-center gap-4">
+                    <div className="h-12 w-12 bg-black text-white flex items-center justify-center">
+                      <FileText className="h-6 w-6" />
+                    </div>
+                    <div>
+                      <p className="font-bold text-lg leading-tight break-all">{file.name}</p>
+                      <p className="text-xs font-mono text-gray-500 uppercase">
+                        {(file.size / 1024 / 1024).toFixed(2)} MB
+                      </p>
+                    </div>
+                  </div>
+                  <Button 
+                    variant="outline" 
+                    size="icon" 
+                    onClick={clearFile}
+                    className="border-2 border-black rounded-none hover:bg-black hover:text-white transition-colors h-8 w-8"
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+
+                {!analysis && (
+                  <Button 
+                    onClick={processFile} 
+                    disabled={isProcessing}
+                    className="w-full h-14 bg-black text-white rounded-none border-2 border-black hover:bg-white hover:text-black transition-colors text-lg font-bold uppercase"
+                  >
+                    {isProcessing ? 'Processing...' : 'Start Analysis'}
+                  </Button>
+                )}
+
+                {isProcessing && (
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-xs font-mono uppercase">
+                      <span>Progress</span>
+                      <span>{progress}%</span>
+                    </div>
+                    <Progress value={progress} className="h-4 rounded-none border-2 border-black bg-white [&>div]:bg-black" />
+                  </div>
+                )}
+
+                {error && (
+                  <div className="bg-red-50 border-2 border-red-500 p-4 flex items-start gap-3 text-red-600">
+                    <AlertCircle className="h-5 w-5 shrink-0 mt-0.5" />
+                    <p className="font-medium">{error}</p>
+                  </div>
+                )}
               </div>
             )}
-          </div>
+          </section>
 
-          {file && (
-            <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-              <div className="flex items-center gap-2 mb-2">
-                <FileText className="h-4 w-4 text-blue-600" />
-                <span className="font-medium">{file.name}</span>
-                <span className="text-sm text-gray-500">
-                  ({(file.size / 1024 / 1024).toFixed(2)} MB)
-                </span>
-              </div>
-              <Button 
-                onClick={processFile} 
-                disabled={isProcessing}
-                className="w-full"
-              >
-                {isProcessing ? 'Processing...' : 'Process File'}
-              </Button>
-            </div>
-          )}
-
-          {isProcessing && (
-            <div className="mt-4">
-              <Progress value={progress} className="mb-2" />
-              <p className="text-sm text-gray-600 text-center">
-                Processing your data... {progress}%
-              </p>
-            </div>
-          )}
-
-          {error && (
-            <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-red-600">{error}</p>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      {analysis && (
-        <div className="space-y-6">
-          {/* Summary Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Card>
-              <CardContent className="p-4">
-                <div className="flex items-center gap-2">
-                  <BarChart3 className="h-5 w-5 text-blue-600" />
-                  <div>
-                    <p className="text-2xl font-bold">{analysis.summary.totalRows}</p>
-                    <p className="text-sm text-gray-600">Total Rows</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardContent className="p-4">
-                <div className="flex items-center gap-2">
-                  <FileText className="h-5 w-5 text-green-600" />
-                  <div>
-                    <p className="text-2xl font-bold">{analysis.summary.totalColumns}</p>
-                    <p className="text-sm text-gray-600">Total Columns</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardContent className="p-4">
-                <div className="flex items-center gap-2">
-                  <Download className="h-5 w-5 text-purple-600" />
-                  <div>
-                    <p className="text-2xl font-bold">
-                      {Object.values(analysis.summary.missingValues).reduce((a, b) => a + b, 0)}
-                    </p>
-                    <p className="text-sm text-gray-600">Missing Values</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Download Section */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <FileDown className="h-5 w-5" />
-                Download Results
-              </CardTitle>
-              <CardDescription>
-                Get your cleaned data and analysis reports
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {analysis && (
+            <section className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <h2 className="text-lg font-bold uppercase mb-4 flex items-center gap-2">
+                <span className="bg-black text-white px-2 py-0.5 text-xs">02</span>
+                Export Options
+              </h2>
+              <div className="grid gap-3">
                 <Button 
                   onClick={downloadCleanedData}
-                  variant="outline"
-                  className="w-full"
+                  className="h-14 justify-between bg-white text-black border-2 border-black rounded-none hover:bg-black hover:text-white group"
                 >
-                  <Download className="h-4 w-4 mr-2" />
-                  Download Cleaned Data (CSV)
+                  <span className="font-bold uppercase flex items-center gap-2">
+                    <FileDown className="h-4 w-4" />
+                    Cleaned CSV
+                  </span>
+                  <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                 </Button>
                 
                 <Button 
                   onClick={downloadPDFReport}
-                  variant="outline"
-                  className="w-full"
+                  className="h-14 justify-between bg-white text-black border-2 border-black rounded-none hover:bg-black hover:text-white group"
                 >
-                  <FileDown className="h-4 w-4 mr-2" />
-                  Download PDF Report
+                  <span className="font-bold uppercase flex items-center gap-2">
+                    <FileText className="h-4 w-4" />
+                    PDF Report
+                  </span>
+                  <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                </Button>
+                
+                <Button 
+                  onClick={downloadHTMLReport}
+                  className="h-14 justify-between bg-white text-black border-2 border-black rounded-none hover:bg-black hover:text-white group"
+                >
+                  <span className="font-bold uppercase flex items-center gap-2">
+                    <BarChart3 className="h-4 w-4" />
+                    HTML Dashboard
+                  </span>
+                  <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </div>
-              
-              <Button 
-                onClick={downloadHTMLReport}
-                variant="outline"
-                className="w-full"
-              >
-                <FileDown className="h-4 w-4 mr-2" />
-                Download HTML Dashboard
-              </Button>
-            </CardContent>
-          </Card>
+            </section>
+          )}
+        </div>
 
-          {/* Data Preview */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Data Preview (First 5 Rows)</CardTitle>
-              <CardDescription>
-                Preview of your cleaned data
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b">
+        {/* Right Column: Analysis Results */}
+        {analysis && (
+          <div className="space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700">
+            <section>
+              <h2 className="text-lg font-bold uppercase mb-4 flex items-center gap-2">
+                <span className="bg-black text-white px-2 py-0.5 text-xs">03</span>
+                Metrics
+              </h2>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="border-2 border-black p-6 hover:bg-gray-50 transition-colors">
+                  <p className="text-xs font-mono text-gray-500 uppercase mb-2">Total Rows</p>
+                  <p className="text-4xl font-black">{analysis.summary.totalRows}</p>
+                </div>
+                <div className="border-2 border-black p-6 hover:bg-gray-50 transition-colors">
+                  <p className="text-xs font-mono text-gray-500 uppercase mb-2">Total Columns</p>
+                  <p className="text-4xl font-black">{analysis.summary.totalColumns}</p>
+                </div>
+                <div className="col-span-2 border-2 border-black p-6 hover:bg-gray-50 transition-colors">
+                  <p className="text-xs font-mono text-gray-500 uppercase mb-2">Missing Values Detected</p>
+                  <p className="text-4xl font-black text-red-600">
+                    {Object.values(analysis.summary.missingValues).reduce((a, b) => a + b, 0)}
+                  </p>
+                </div>
+              </div>
+            </section>
+
+            <section>
+              <h2 className="text-lg font-bold uppercase mb-4 flex items-center gap-2">
+                <span className="bg-black text-white px-2 py-0.5 text-xs">04</span>
+                Data Preview
+              </h2>
+              <div className="border-2 border-black overflow-x-auto">
+                <table className="w-full text-sm text-left">
+                  <thead className="bg-black text-white uppercase text-xs">
+                    <tr>
                       {Object.keys(analysis.cleanedData[0] || {}).map((column) => (
-                        <th key={column} className="text-left p-2 font-medium">
+                        <th key={column} className="p-4 font-bold whitespace-nowrap border-b border-white/20">
                           {column}
                         </th>
                       ))}
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody className="divide-y divide-gray-200">
                     {analysis.cleanedData.slice(0, 5).map((row, index) => (
-                      <tr key={index} className="border-b">
+                      <tr key={index} className="hover:bg-gray-50">
                         {Object.values(row).map((value, colIndex) => (
-                          <td key={colIndex} className="p-2">
+                          <td key={colIndex} className="p-4 font-mono text-xs border-r border-gray-100 last:border-0 whitespace-nowrap">
                             {typeof value === 'number' ? value.toFixed(2) : String(value)}
                           </td>
                         ))}
@@ -305,11 +303,14 @@ export default function FileUpload() {
                     ))}
                   </tbody>
                 </table>
+                <div className="bg-gray-50 p-2 text-center border-t border-black text-xs font-mono uppercase text-gray-500">
+                  Showing first 5 rows
+                </div>
               </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
+            </section>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

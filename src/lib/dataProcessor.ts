@@ -103,7 +103,7 @@ export class DataProcessor {
         }
         
         // Handle outliers for numerical data
-       if (this.isNumeric(value) && typeof value === 'number' && this.isOutlier(column, value)) {
+        if (this.isNumeric(value) && typeof value === 'number' && this.isOutlier(column, value)) {
           const cleanedValue = this.handleOutlier(column, value);
           value = cleanedValue;
           cleaningActions.push(`Handled outlier in column ${column}`);
